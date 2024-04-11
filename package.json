@@ -5,8 +5,10 @@
   "type": "module",
   "main": "udp-server.js",
   "scripts": {
-    "server": "node --watch src/udp-server.js",
-    "client": "node src/udp-client.js"
+    "udp-server": "node --watch src/udp-server.js",
+    "udp-client": "node src/udp-client.js",
+    "tcp-server": "node --watch src/tcp-server.js",
+    "tcp-client": "node src/tcp-client.js"
   },
   "keywords": [],
   "author": "",
