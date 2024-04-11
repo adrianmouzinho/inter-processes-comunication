@@ -1,0 +1,14 @@
+{
+  "name": "inter-processes-comunication",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "udp-server.js",
+  "scripts": {
+    "server": "node --watch src/udp-server.js",
+    "client": "node src/udp-client.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
