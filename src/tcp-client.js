@@ -7,24 +7,25 @@ if (process.argv.length < 4) {
 
 const message = process.argv[2];
 const host = process.argv[3];
-const serverPort = 7896;
+const port = 7896;
 
-const client = net.createConnection({
-  port: serverPort,
-  host,
+const client = net.createConnection({ port, host });
+
+client.on('error', (err) => {
+  console.error(`client error:\n${err.stack}`);
+  client.end();
 });
 
 client.on('connect', () => {
-  console.log('Connected to server!');
+  console.log('connected to server');
   client.write(message);
 });
 
 client.on('data', (data) => {
-  console.log(`Received reply: ${data.toString()}`);
+  console.log(`client got: ${data}`);
   client.end();
 });
 
-client.on('error', (err) => {
-  console.error(`Client error: ${err.message}`);
-  client.end();
-});
+client.on('end', () => {
+  console.log('disconnected from server');
+}); 

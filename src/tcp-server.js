@@ -1,25 +1,25 @@
 import net from 'node:net';
 
-const serverPort = 7896;
+const port = 7896;
 
-const server = net.createServer((clientSocket) => {
-  console.log('New client connected!');
+const server = net.createServer((socket) => {
+  console.log('client connected');
 
-  clientSocket.on('data', (data) => {
-    const message = data.toString();
-    console.log(`Received message: ${message}`);
-    clientSocket.write(`Echo: ${message}`);
+  socket.on('data', (data) => {
+    console.log(`server got: ${data}`);
+    socket.write('hello tcp client!');
   });
 
-  clientSocket.on('end', () => {
-    console.log('Client disconnected!');
+  socket.on('end', () => {
+    console.log('client disconnected');
   });
 
-  clientSocket.on('error', (err) => {
-    console.error(`Client error: ${err.message}`);
+  socket.on('error', (err) => {
+    console.error(`server error:\n${err.stack}`);
+    socket.end();
   });
 });
 
-server.listen(serverPort, () => {
-  console.log(`TCP Server listening on port ${serverPort}`);
+server.listen(port, () => {
+  console.log(`server listening on port ${port}`);
 });

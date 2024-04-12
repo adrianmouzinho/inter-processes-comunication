@@ -21,7 +21,7 @@ server.on('message', (msg, rinfo) => {
 
 server.on('listening', () => {
   const address = server.address();
-  console.log(`server listening ${address.address}:${address.port}`);
+  console.log(`server listening on port ${address.port}`);
 });
 
 server.bind(6789);
