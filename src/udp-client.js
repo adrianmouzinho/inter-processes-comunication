@@ -1,27 +1,27 @@
 import dgram from 'node:dgram';
+import { Buffer } from 'node:buffer';
 
 if (process.argv.length < 4) {
   console.error('Usage: node upd-client.js <message> <host>');
   process.exit(1);
 }
 
-const message = process.argv[2];
-const host = process.argv[3];
-const serverPort = 6789;
+const message = Buffer.from(process.argv[2]);
+const address = process.argv[3];
+const port = 6789;
 
 const client = dgram.createSocket('udp4');
 
-const messageBuffer = Buffer.from(message);
+client.connect(port, address, () => {
+  client.send(message, (err) => {
+    if (err) {
+      console.error(`error sending message: ${err.stack}`);
+      client.close();
+    }
 
-client.send(messageBuffer, 0, messageBuffer.length, serverPort, host, (err) => {
-  if (err) {
-    console.error(`Error sending message: ${err.message}`);
-    client.close();
-    return;
-  }
-
-  client.on('message', (receivedData, remoteInfo) => {
-    console.log(`Received reply: ${receivedData.toString()}`);
-    client.close();
+    client.on('message', (msg, rinfo) => {
+      console.log(`client got: ${msg}`);
+      client.close();
+    });
   });
 });

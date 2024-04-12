@@ -1,28 +1,27 @@
 import dgram from 'node:dgram';
 
-const serverPort = 6789;
-
 const server = dgram.createSocket('udp4');
 
-server.on('listening', () => {
-  const address = server.address();
-  console.log(`UDP Server listening on port ${address.port}`);
+server.on('error', (err) => {
+  console.error(`server error:\n${err.stack}`);
+  server.close();
 });
 
-server.on('message', (receivedData, remoteInfo) => {
-  console.log(`Received message: ${receivedData.toString()}`);
+server.on('message', (msg, rinfo) => {
+  console.log(`server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
 
-  const reply = receivedData;
-  server.send(reply, remoteInfo.port, remoteInfo.address, (err) => {
+  server.send('hello udp client', rinfo.port, rinfo.address, (err) => {
     if (err) {
-      console.error(`Error sending reply: ${err.message}`);
+      console.error(`error sending message: ${err.stack}`);
+      client.close();
+      return;
     }
   });
 });
 
-server.on('error', (err) => {
-  console.error(`Server error: ${err.message}`);
-  server.close();
+server.on('listening', () => {
+  const address = server.address();
+  console.log(`server listening ${address.address}:${address.port}`);
 });
 
-server.bind(serverPort);
+server.bind(6789);
